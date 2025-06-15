@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ウェブマニア - Official Website</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (ポップなフォント) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Lucide) -->
+    <script src="https://unpkg.com/lucide@0.395.0/dist/lucide.min.js"></script>
+
+    <style>
+        /* カスタムスタイル */
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: #1a0b2e; /* 深い紫 */
+            color: #f0f0f0;
+            overflow-x: hidden;
+        }
+        
+        .hero-bg {
+            background: radial-gradient(ellipse at bottom, #7e22ce 0%, #1a0b2e 60%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .video-card:hover .thumbnail-overlay { opacity: 1; }
+        .video-card:hover img { transform: scale(1.05); }
+
+        .wave-divider {
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            transform: rotate(180deg);
+        }
+
+        .wave-divider svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 150px;
+        }
+
+        .wave-divider .shape-fill { fill: #1a0b2e; }
+
+        #modal { transition: opacity 0.3s ease; }
+        
+        @keyframes move-blob-1 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, -80px) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        @keyframes move-blob-2 {
+            0% { transform: translate(-40px, 60px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+        .blob-1 { animation: move-blob-1 20s ease-in-out infinite; }
+        .blob-2 { animation: move-blob-2 25s ease-in-out infinite; }
+
+        .ai-generate-btn:disabled {
+            cursor: not-allowed;
+            background-color: #ec4899;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fade-in-stagger {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(236, 72, 153, 0.3);
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+            z-index: 1;
+        }
+
+        .hero-content > * { opacity: 0; }
+        .hero-icon-container { animation: fade-in-stagger 1s ease-out 0.2s forwards; }
+        .hero-title-1 { animation: fade-in-stagger 1s ease-out 0.4s forwards; }
+        .hero-title-2 { animation: fade-in-stagger 1s ease-out 0.6s forwards; }
+        .hero-subtitle { animation: fade-in-stagger 1s ease-out 0.8s forwards; }
+        
+        /* モバイルメニュー用のスタイル */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 背景の装飾SVG -->
+    <div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden">
+        <svg width="100%" height="100%" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <defs>
+                <radialGradient id="blobGradient1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                    <stop offset="0%" style="stop-color: rgba(236, 72, 153, 0.1);" />
+                    <stop offset="100%" style="stop-color: rgba(236, 72, 153, 0);" />
+                </radialGradient>
+                <radialGradient id="blobGradient2" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                    <stop offset="0%" style="stop-color: rgba(168, 85, 247, 0.15);" />
+                    <stop offset="100%" style="stop-color: rgba(168, 85, 247, 0);" />
+                </radialGradient>
+            </defs>
+            <g class="blob-1">
+                 <path d="M485.5,528.8Q282,557.6,260,399.8Q238,242,448,221Q658,200,683,350Q708,500,485.5,528.8Z" fill="url(#blobGradient1)"/>
+            </g>
+             <g class="blob-2">
+                 <path d="M968,485.5Q909,671,729.5,679Q550,687,510,518.5Q470,350,685,274Q900,198,968,341.5Q1036,485,968,485.5Z" fill="url(#blobGradient2)"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- ヘッダー -->
+    <header id="header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 glass-effect">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold tracking-wider flex items-center gap-2">
+                <img src="https://pbs.twimg.com/profile_images/1907039830510563328/WjApH4Wq_400x400.jpg" alt="ウェブマニア アイコン" class="w-10 h-10 rounded-full border-2 border-pink-400">
+                ウェブマニア
+            </a>
+            <!-- PC用ナビゲーション -->
+            <nav class="hidden md:flex space-x-6 text-lg items-center">
+                <a href="#about" class="hover:text-pink-400 transition-colors">自己紹介</a>
+                <a href="#videos" class="hover:text-pink-400 transition-colors">おすすめ動画</a>
+                <a href="#ai-explainer" class="hover:text-pink-400 transition-colors">✨AI解説</a>
+                <a href="#links" class="hover:text-pink-400 transition-colors">外部リンク</a>
+            </nav>
+            <!-- モバイル用ハンバーガーボタン -->
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="text-white focus:outline-none">
+                    <i data-lucide="menu" class="w-8 h-8"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- モバイル用ナビゲーションメニュー -->
+    <div id="mobile-menu" class="fixed top-0 right-0 h-full w-64 bg-gray-900/90 backdrop-blur-lg z-40 transform translate-x-full md:hidden">
+        <nav class="flex flex-col items-center justify-center h-full space-y-8 text-xl">
+            <a href="#about" class="mobile-nav-link text-white hover:text-pink-400">自己紹介</a>
+            <a href="#videos" class="mobile-nav-link text-white hover:text-pink-400">おすすめ動画</a>
+            <a href="#ai-explainer" class="mobile-nav-link text-white hover:text-pink-400">✨AI解説</a>
+            <a href="#links" class="mobile-nav-link text-white hover:text-pink-400">外部リンク</a>
+        </nav>
+    </div>
+
+
+    <main>
+        <!-- ヒーローセクション -->
+        <section class="h-screen w-full flex flex-col justify-center items-center text-center hero-bg p-4">
+             <!-- Particles -->
+            <div class="particle" style="width: 15px; height: 15px; top: 20%; left: 10%; animation-delay: 0s;"></div>
+            <div class="particle" style="width: 25px; height: 25px; top: 50%; left: 80%; animation-delay: 1s;"></div>
+            <div class="particle" style="width: 10px; height: 10px; top: 80%; left: 25%; animation-delay: 2s; background-color: rgba(168, 85, 247, 0.4);"></div>
+            <div class="particle" style="width: 20px; height: 20px; top: 30%; left: 90%; animation-delay: 3s; background-color: rgba(168, 85, 247, 0.4);"></div>
+            <div class="particle" style="width: 18px; height: 18px; top: 65%; left: 5%; animation-delay: 4s;"></div>
+
+             <!-- 装飾SVGグリッド -->
+            <div class="absolute inset-0 z-0 opacity-5">
+                 <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)" /></svg>
+            </div>
+            <div class="z-10 flex flex-col items-center hero-content">
+                <div class="p-6 mb-6 md:mb-8 rounded-full hero-icon-container" style="background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, rgba(236, 72, 153, 0) 70%);">
+                    <i data-lucide="zap" class="w-14 h-14 md:w-16 md:h-16 text-pink-400 animate-pulse" style="filter: drop-shadow(0 0 10px #ec4899) drop-shadow(0 0 5px #ec4899);"></i>
+                </div>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 hero-title-1" style="text-shadow: 0 0 20px rgba(236, 72, 153, 0.6), 0 0 40px rgba(124, 58, 237, 0.4);">
+                    サクサク見れる
+                </h1>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-8 hero-title-2" style="text-shadow: 0 0 20px rgba(236, 72, 153, 0.6), 0 0 40px rgba(124, 58, 237, 0.4);">
+                    ゆっくり解説
+                </h1>
+                <p class="text-base sm:text-lg md:text-2xl font-bold text-gray-200 max-w-3xl hero-subtitle">
+                    が編集のコンセプトです
+                </p>
+            </div>
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+                <i data-lucide="arrow-down" class="w-8 h-8 text-white"></i>
+            </div>
+            <!-- 波状の区切り -->
+            <div class="wave-divider">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
+                </svg>
+            </div>
+        </section>
+
+        <!-- 自己紹介セクション -->
+        <section id="about" class="py-16 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="fade-in max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10 md:gap-16">
+                    <div class="w-40 h-40 md:w-60 md:h-60 flex-shrink-0 relative">
+                        <!-- 装飾SVG -->
+                        <div class="absolute -top-3 -left-3 w-full h-full rounded-full bg-pink-500/50 -z-10 blur-xl"></div>
+                        <img src="https://pbs.twimg.com/profile_images/1907039830510563328/WjApH4Wq_400x400.jpg" alt="ウェブマニア プロフィール画像" class="w-full h-full rounded-full object-cover border-4 border-purple-400 shadow-2xl">
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl md:text-5xl font-bold mb-4">ウェブマニア</h2>
+                        <p class="text-base md:text-lg mb-6 text-gray-300 leading-relaxed">
+                           初めまして！ウェブマニアです。私は主にIT関連の情報ややインターネットの話題（失踪中だった、、、）、初心者向けマインクラフト解説などを「ゆっくり解説」形式で紹介しています。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- おすすめ動画セクション -->
+        <section id="videos" class="py-16 md:py-32 bg-black bg-opacity-20 relative">
+             <!-- 装飾SVG -->
+            <div class="absolute top-0 left-0 w-64 h-64 opacity-20 -translate-x-1/2 -translate-y-1/2">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="#EC4899" d="M48.2,-58.3C61.3,-46.8,70.1,-30.9,74.5,-13.3C78.9,4.4,78.9,23.6,70.1,38.8C61.3,54.1,43.7,65.3,26.2,71.2C8.7,77.1,-8.6,77.6,-25.2,71.2C-41.9,64.8,-57.8,51.5,-66.9,35.1C-76,18.7,-78.3,-0.7,-72.7,-17.3C-67,-33.9,-53.4,-47.7,-38.7,-58.5C-24,-69.3,-8.2,-77,8.8,-79C25.8,-81,51.6,-77.2,48.2,-58.3Z" transform="translate(100 100)" />
+                </svg>
+            </div>
+            <div class="container mx-auto px-6">
+                <div class="fade-in text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">おすすめ動画</h2>
+                    <p class="text-base md:text-lg text-gray-400 max-w-2xl mx-auto">特に人気のあった動画や、ぜひ見てほしい動画をピックアップしました。</p>
+                </div>
+                <div id="video-list" class="fade-in grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                    <!-- JavaScriptで動画が挿入されます -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Gemini AI解説セクション -->
+        <section id="ai-explainer" class="py-16 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="fade-in text-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4 flex items-center justify-center gap-4">
+                        <i data-lucide="sparkles" class="text-pink-400"></i>
+                        AIによるウェブマニア風解説
+                        <i data-lucide="sparkles" class="text-pink-400"></i>
+                    </h2>
+                    <p class="text-base md:text-lg text-gray-400 max-w-2xl mx-auto">気になるIT用語やネットスラングを入力すると、AIがウェブマニアさんの「ゆっくり解説」風に説明してくれます。</p>
+                </div>
+                <div class="fade-in max-w-2xl mx-auto glass-effect rounded-2xl p-6 md:p-8">
+                    <div class="mb-4">
+                        <label for="api-key-input" class="block text-sm font-medium text-gray-300 mb-2">ご自身のGemini APIキーを入力してください</label>
+                        <input type="password" id="api-key-input" placeholder="ここにAPIキーを貼り付け" class="w-full bg-gray-900/50 border border-purple-400/50 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-pink-400 focus:outline-none transition-all">
+                        <p class="text-xs text-gray-500 mt-2">APIキーはブラウザにのみ保存され、外部に送信されることはありません。</p>
+                    </div>
+                    <div class="flex flex-col gap-4 mb-6">
+                        <input type="text" id="ai-term-input" placeholder="例: API, DDoS攻撃, lol" class="w-full bg-gray-900/50 border border-purple-400/50 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-pink-400 focus:outline-none transition-all">
+                        <button id="ai-explainer-btn" class="ai-generate-btn bg-pink-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-pink-600 transition-colors flex items-center justify-center gap-2 whitespace-nowrap">
+                            <i data-lucide="wand-2"></i>
+                            <span>解説を生成</span>
+                        </button>
+                    </div>
+                    <div id="ai-explainer-result-area" class="bg-black/20 rounded-lg p-6 min-h-[150px] text-gray-300 whitespace-pre-wrap leading-relaxed transition-all">
+                        ここに解説が表示されます...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 外部リンクセクション -->
+        <section id="links" class="py-16 md:py-32">
+            <div class="container mx-auto px-6">
+                <div class="fade-in text-center mb-12 md:mb-16">
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">外部リンク</h2>
+                    <p class="text-base md:text-lg text-gray-400">YouTubeやSNSはこちらからフォロー！</p>
+                </div>
+                <div class="fade-in max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <a href="https://www.youtube.com/@%E3%82%A6%E3%82%A7%E3%83%96%E3%83%9E%E3%83%8B%E3%82%A2" target="_blank" rel="noopener noreferrer" class="group p-6 rounded-2xl flex items-center gap-6 glass-effect transition-all duration-300 hover:border-pink-400 hover:scale-105">
+                        <div class="bg-red-500/20 p-4 rounded-full">
+                           <i data-lucide="youtube" class="w-8 h-8 text-red-400"></i>
+                        </div>
+                        <div>
+                           <h3 class="text-xl font-bold">本アカ</h3>
+                           <p class="text-gray-400">メインチャンネル</p>
+                        </div>
+                    </a>
+                    <a href="https://x.com/webmaniasns" target="_blank" rel="noopener noreferrer" class="group p-6 rounded-2xl flex items-center gap-6 glass-effect transition-all duration-300 hover:border-blue-400 hover:scale-105">
+                         <div class="bg-blue-500/20 p-4 rounded-full">
+                           <i data-lucide="twitter" class="w-8 h-8 text-blue-400"></i>
+                        </div>
+                        <div>
+                           <h3 class="text-xl font-bold">Twitterアカウント</h3>
+                           <p class="text-gray-400">@webmaniasns</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- フッター -->
+    <footer class="py-10 bg-black bg-opacity-30">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <p>&copy; 2024 ウェブマニア. All Rights Reserved.</p>
+             <p class="text-sm mt-2">This is a fan-made website.</p>
+        </div>
+    </footer>
+
+    <!-- 動画モーダル -->
+    <div id="modal" class="fixed inset-0 bg-black/80 z-50 flex justify-center items-center p-4 opacity-0 pointer-events-none">
+        <div id="modal-content" class="bg-[#120822] rounded-2xl w-full max-w-4xl shadow-2xl relative transform scale-95 transition-transform duration-300">
+             <button id="modal-close" class="absolute -top-4 -right-4 w-10 h-10 bg-pink-500 rounded-full flex justify-center items-center text-white hover:bg-pink-600 transition-colors">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="aspect-video">
+                 <iframe id="youtube-player" class="w-full h-full rounded-t-lg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="p-6">
+                <h3 id="modal-title" class="text-2xl font-bold mb-4"></h3>
+                <a id="modal-youtube-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">
+                    <i data-lucide="youtube" class="w-6 h-6"></i>
+                    YouTubeで見る
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- モバイルメニューの制御 ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+            function toggleMenu() {
+                mobileMenu.classList.toggle('translate-x-full');
+            }
+
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', toggleMenu);
+            });
+
+
+            // --- フェードインアニメーション ---
+            const faders = document.querySelectorAll('.fade-in');
+            const appearOptions = {
+                threshold: 0.2,
+                rootMargin: "0px 0px -50px 0px"
+            };
+            const appearOnScroll = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
+            
+            // --- ヘッダーの背景色変更 ---
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('bg-opacity-70');
+                } else {
+                    header.classList.remove('bg-opacity-70');
+                }
+            });
+
+            // --- 動画データの定義と表示 ---
+            const videos = [
+                { id: 's83EZJQfToA', title: '【成果報告多数】簡単設定でWi-Fiを高速ブースト！ネット速度を爆速に変える高速設定を教えます【PC・スマホ・Switch対応】' },
+                { id: 'lLljqdgH7VE', title: '6億人超！今さら聞けないDiscordの使い方をこの動画1本で徹底解説します【世界で話題のSNS】' },
+                { id: 'GWmq6gnnvO4', title: '【ウザすぎる】パソコンの左上に現れる謎の「左上文字」を徹底解説！原因・直し方・機能解説・非表示設定など気になる疑問を解決' },
+                { id: 'bQlgfrlHnSg', title: '衝撃の連続！日本発の国産ブラウザ「Floorp 」がやばすぎたので徹底解説する' }
+            ];
+
+            const videoList = document.getElementById('video-list');
+            videos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card group rounded-2xl overflow-hidden glass-effect shadow-lg cursor-pointer transition-all duration-300 hover:shadow-pink-500/20 hover:-translate-y-2';
+                videoCard.innerHTML = `
+                    <div class="relative">
+                        <img src="https://i.ytimg.com/vi/${video.id}/hqdefault.jpg" alt="${video.title}" class="w-full h-auto aspect-video object-cover transition-transform duration-300">
+                        <div class="thumbnail-overlay absolute inset-0 bg-black/50 flex justify-center items-center opacity-0 transition-opacity duration-300">
+                            <i data-lucide="play-circle" class="w-16 h-16 text-white"></i>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-md leading-tight h-16">${video.title}</h3>
+                    </div>
+                `;
+                videoList.appendChild(videoCard);
+                
+                videoCard.addEventListener('click', () => {
+                    openModal(video);
+                });
+            });
+
+            // --- 動画モーダル関連 ---
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modal-content');
+            const modalClose = document.getElementById('modal-close');
+            const youtubePlayer = document.getElementById('youtube-player');
+            const modalTitle = document.getElementById('modal-title');
+            const modalYoutubeLink = document.getElementById('modal-youtube-link');
+
+            function openModal(video) {
+                youtubePlayer.src = `https://www.youtube.com/embed/${video.id}?autoplay=1`;
+                modalTitle.textContent = video.title;
+                modalYoutubeLink.href = `https://www.youtube.com/watch?v=${video.id}`;
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95');
+                }, 50);
+            }
+
+            function closeModal() {
+                modalContent.classList.add('scale-95');
+                modal.classList.add('opacity-0');
+                 setTimeout(() => {
+                    modal.classList.add('pointer-events-none');
+                    youtubePlayer.src = '';
+                }, 300);
+            }
+
+            modalClose.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if(e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // --- Gemini AI解説機能 ---
+            const explainerBtn = document.getElementById('ai-explainer-btn');
+            const termInput = document.getElementById('ai-term-input');
+            const explainerResultArea = document.getElementById('ai-explainer-result-area');
+            const apiKeyInput = document.getElementById('api-key-input');
+
+            apiKeyInput.value = localStorage.getItem('geminiApiKey') || '';
+            apiKeyInput.addEventListener('input', () => {
+                localStorage.setItem('geminiApiKey', apiKeyInput.value);
+            });
+
+            explainerBtn.addEventListener('click', async () => {
+                const apiKey = apiKeyInput.value.trim();
+                const term = termInput.value.trim();
+
+                if (!apiKey) {
+                    explainerResultArea.textContent = 'APIキーを入力してください。';
+                    return;
+                }
+
+                if (!term) {
+                    explainerResultArea.textContent = '解説したい用語を入力してください。';
+                    return;
+                }
+
+                explainerResultArea.innerHTML = `<div class="flex items-center justify-center gap-2"><div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div><p>AIが解説を生成中...</p></div>`;
+                explainerBtn.disabled = true;
+
+                try {
+                    const prompt = `「${term}」という言葉を、ウェブマニアというWeb系に詳しいゆっくり解説チャンネルのようなスタイルで、霊夢と魔理沙のキャラクターが会話する形式で説明してください。専門用語を避け、面白くて、分かりやすく、IT初心者にも理解できるように解説してください。必ず以下のフォーマットに従ってください。\n\nフォーマット:\n霊夢「(最初のセリフ)」\n魔理沙「(応答セリフ)」\n霊夢「(次のセリフ)」\n魔理沙「(応答セリフ)」\n...`;
+
+                    let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                    const payload = { contents: chatHistory };
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                         const errorData = await response.json();
+                         throw new Error(`API error: ${response.status} ${response.statusText}. ${errorData?.error?.message || ''}`);
+                    }
+                    
+                    const result = await response.json();
+
+                    if (result.candidates?.[0]?.content?.parts?.[0]?.text) {
+                        explainerResultArea.textContent = result.candidates[0].content.parts[0].text;
+                    } else {
+                        throw new Error("予期しないAPIレスポンス形式です。");
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching AI explanation:', error);
+                    explainerResultArea.textContent = 'エラーが発生しました。APIキーが正しいか、入力した用語に問題がないか確認してください。';
+                } finally {
+                    explainerBtn.disabled = false;
+                }
+            });
+
+            // --- Lucideアイコンの初期化 ---
+            try {
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            } catch (e) {
+                console.error('Lucide icons could not be created.', e);
+            }
+        });
+    </script>
+</body>
+</html>
